@@ -1,4 +1,4 @@
-import json
+import time
 import socket
 import pickle
 import os
@@ -11,29 +11,20 @@ sock.connect(server_address)
 
 data_directory = os.path.dirname(os.path.realpath(__file__))
 data_path = os.path.join(data_directory, 'userinfo.json')
-if not os.path.exists(data_path):
-    with open(data_path, 'w') as data_file:
-        username = input('Please enter your username: ')
-        json.dump({'username': username}, data_file)
-else:
-    with open(data_path, 'r') as data_file:
-        username = json.load(data_file)['username']
+# if not os.path.exists(data_path):
+#     with open(data_path, 'w') as data_file:
+#         username = input('Please enter your username: ')
+#         json.dump({'username': username}, data_file)
+# else:
+#     with open(data_path, 'r') as data_file:
+#         username = json.load(data_file)['username']
+username = input("Please provide your username")
 
-message = input(">>>")
-binary_msg = pickle.dumps(message)
+while True:
+    # TODO: the input prevents us from receiving new messages from the server
+    message = input(">>>")
+    binary_msg = pickle.dumps(message)
 
-try:
-    print('sending {!r}'.format(*server_address))
+    time.sleep(0.1)
     sock.sendall(binary_msg)
-
-    amount_received = 0
-    amount_expected = len(message)
-
-    while amount_received < amount_expected:
-        data = sock.recv(1024)
-        amount_received += len(data)
-        print('received {!r}'.format(pickle.loads(data)))
-
-finally:
-    print('closing socket')
-    sock.close()
+    data = sock.recv(1024)
