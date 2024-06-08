@@ -17,6 +17,8 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
         except pickle.UnpicklingError:
             print("Keepalive received")
 
+
 if __name__ == "__main__":
     print("Server started")
     server = socketserver.ThreadingTCPServer((HOST, PORT), MyTCPHandler)
+    server.serve_forever()
