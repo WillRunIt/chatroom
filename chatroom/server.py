@@ -1,5 +1,5 @@
-import pickle
 import socket
+import pickle
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_address = ('localhost', 65432)
@@ -15,7 +15,7 @@ while True:
         print('connection from ', client_address)
         while True:
             data = connection.recv(1024)
-            data=pickle.loads(data)
+            data = pickle.loads(data)
             print('received {!r}'.format(data))
             if data:
                 print('sending data back to the client')
