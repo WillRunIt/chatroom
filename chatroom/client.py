@@ -2,6 +2,7 @@ import time
 import socket
 import pickle
 import os
+import threading
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -20,11 +21,21 @@ data_path = os.path.join(data_directory, 'userinfo.json')
 #         username = json.load(data_file)['username']
 username = input("Please provide your username")
 
-while True:
-    # TODO: the input prevents us from receiving new messages from the server
-    message = input(">>>")
-    binary_msg = pickle.dumps(message)
+def sender():
+    while True:
+        message = input(">>>")
+        binary_msg = pickle.dumps(message)
+        sock.sendall(binary_msg)
 
-    time.sleep(0.1)
-    sock.sendall(binary_msg)
-    data = sock.recv(1024)
+def receiver():
+    while True:
+        data = sock.recv(1024)
+        if not data:
+            continue
+        else:
+            print(pickle.loads(data))
+
+receiver_thread = threading.Thread(target=receiver)
+receiver_thread.start()
+sender_thread = threading.Thread(target=sender)
+sender_thread.start()

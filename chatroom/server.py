@@ -6,16 +6,33 @@ HOST = "localhost"
 PORT = 65432
 
 messages_queue = []
+clients = []
 message_queue_lock = threading.Lock()
 class MyTCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
-        global messages_queue
+        global messages_queue, clients
+        with message_queue_lock:
+            clients.append(self.request)
         try:
-            data = self.request.recv(1024)
-            data = pickle.loads(data)
-            self.request.sendall(pickle.dumps(data))
+            while True:
+                data = self.request.recv(1024)
+                if not data:
+                    break
+                data = pickle.loads(data)
+                with message_queue_lock:
+                    messages_queue.append(data)
+                with message_queue_lock:
+                    for client in clients:
+                        try:
+                            client.sendall(pickle.dumps(data))
+                        except Exception as e:
+                            print(f"Error sending message to client: {e}")
+
         except pickle.UnpicklingError:
             print("Keepalive received")
+        finally:
+            with message_queue_lock:
+                clients.remove(self.request)
 
 
 if __name__ == "__main__":
