@@ -21,22 +21,23 @@ data_path = os.path.join(data_directory, 'userinfo.json')
 #         username = json.load(data_file)['username']
 username = input("Please provide your username: ")
 
+
 def sender():
     while True:
         message = input()
-        binary_msg = pickle.dumps({"message": message, "username": username})
-        sock.sendall(binary_msg)
+        binary_data = pickle.dumps({"message": message, "username": username})
+        sock.sendall(binary_data)
+
 
 def receiver():
     while True:
-        data = sock.recv(1024)
-        if not data:
+        binary_data = sock.recv(1024)
+        if not binary_data:
             continue
-
-        else:
-            unwrapt_text = pickle.loads(data)
-            if username != unwrapt_text["username"]:
-                print(f"{unwrapt_text['username']}: {unwrapt_text['message']}")
+        data = pickle.loads(binary_data)
+        if username == data["username"]:
+            continue
+        print(f"{data['username']}: {data['message']}")
 
 
 receiver_thread = threading.Thread(target=receiver)
