@@ -3,7 +3,7 @@ import threading
 import socketserver
 
 
-HOST = "localhost"
+HOST = "172.31.38.184"
 PORT = 443
 
 messages_queue = []
