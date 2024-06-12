@@ -2,12 +2,15 @@ import pickle
 import threading
 import socketserver
 
+
 HOST = "localhost"
-PORT = 65432
+PORT = 443
 
 messages_queue = []
 clients = []
 message_queue_lock = threading.Lock()
+
+
 class MyTCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
         global messages_queue, clients

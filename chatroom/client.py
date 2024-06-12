@@ -1,4 +1,3 @@
-import time
 import socket
 import pickle
 import os
@@ -6,7 +5,7 @@ import threading
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-server_address = ('localhost', 65432)
+server_address = ('35.175.251.56', 443)
 print('connecting to {} port {}'.format(*server_address))
 sock.connect(server_address)
 
