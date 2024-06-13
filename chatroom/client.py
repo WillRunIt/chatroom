@@ -5,7 +5,7 @@ import threading
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-server_address = ('35.175.251.56', 443)
+server_address = ('54.174.38.131', 443)
 print('connecting to {} port {}'.format(*server_address))
 sock.connect(server_address)
 
